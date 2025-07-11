@@ -31,7 +31,7 @@ const server = http.createServer((req, res) => {
 });
 
 
-const wss = new WebSocket.Server({ port: 3000 });
+const wss = new WebSocket.Server({ server });
 const PORT = 3000;
 
 server.listen(PORT, () => {
