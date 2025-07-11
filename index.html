@@ -23,9 +23,14 @@
         .boardWrapper {
             background-color: #fff;
             margin: 30px auto;
-            padding: 64px 64px;
+            padding: 64px 20px;
             border-radius: 32px;
             max-width: 320px;
+        }
+        @media (min-width: 394px) {
+            .boardWrapper {
+                padding: 64px 64px;
+            }
         }
         #game-board {
             display: grid;

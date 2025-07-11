@@ -1,7 +1,42 @@
-const WebSocket = require('ws');
+const http = require('http');
 const fs = require('fs');
+const path = require('path');
+const WebSocket = require('ws');
+
+const server = http.createServer((req, res) => {
+    if (req.url === '/' || req.url === '/index.html') {
+      fs.readFile(path.join(__dirname, 'index.html'), (err, content) => {
+        if (err) {
+          res.writeHead(500);
+          res.end('Error loading index.html');
+        } else {
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end(content);
+        }
+      });
+    } else if (req.url.endsWith('.js')) {
+      fs.readFile(path.join(__dirname, req.url), (err, content) => {
+        if (err) {
+          res.writeHead(404);
+          res.end('Not found');
+        } else {
+          res.writeHead(200, { 'Content-Type': 'application/javascript' });
+          res.end(content);
+        }
+      });
+    } else {
+      res.writeHead(404);
+      res.end('Not found');
+    }
+});
+
 
 const wss = new WebSocket.Server({ port: 8080 });
+const PORT = 3000;
+
+server.listen(PORT, () => {
+  console.log(`HTTP + WebSocket server running at http://localhost:${PORT}`);
+});
 
 wss.on('connection', ws => {
     ws.on('message', message => {
@@ -50,10 +85,10 @@ const getMatrix = ws => {
 const updateClients = (ws, wss, payload) => {
     wss.clients.forEach(client => {
         if (client !== ws && client.readyState === 1) {
-          client.send(JSON.stringify({
+            client.send(JSON.stringify({
             type: 'update',
             payload: payload
-          }));
+            }));
         }
-      });
+    });
 }
