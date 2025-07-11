@@ -1,6 +1,9 @@
 class Socket {
     constructor(game) {
         this.ws = new WebSocket('ws://localhost:8080');
+        this.ws.onopen = () => {
+            this.loadMatrixFromServer();
+        };
         this.ws.onmessage = (event) => {
             const msg = JSON.parse(event.data);
             if (msg.type === 'get' && msg.status === 'ok') {

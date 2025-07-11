@@ -16,7 +16,7 @@ class HistoryManager {
 
 class Game {
     constructor() {
-      this.matrix = this.createEmptyMatrix();
+      this.matrix = [];
     }  
     createEmptyMatrix() {
         const numbers = [...Array(15).keys()].map(n => n + 1);
@@ -57,10 +57,8 @@ class Game {
   
     isNextToZero(x, y) {
         const [zx, zy] = this.findZero();
-      
         const dx = Math.abs(x - zx);
         const dy = Math.abs(y - zy);
-      
         return (dx + dy === 1);
     }
 }

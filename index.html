@@ -33,7 +33,6 @@
             grid-template-rows: repeat(4, 60px);
             gap: 5px;
         }
-
         .cell {
             display: flex;
             align-items: center;
@@ -45,14 +44,12 @@
             height: 60px;
             border-radius: 4px;
         }
-
         .clickeble {
             cursor: pointer;
         }
         .clickeble:hover {
             background: #b1d4ea;
         }
-
         .empty {
             background-color: #fff;
         }
@@ -71,7 +68,6 @@
         const game = new Game();
         const historyManager = new HistoryManager();
         const socket = new Socket(game);
-
         const renderMatrix = matrix => {
             const board = document.getElementById('game-board');
             board.innerHTML = '';
@@ -80,11 +76,9 @@
                 for (let col = 0; col < matrix[row].length; col++) {
                     const cell = document.createElement('div');
                     cell.classList.add('cell');
-
                     const value = matrix[row][col];
                     cell.setAttribute('data-row', row);
                     cell.setAttribute('data-col', col);
-                    
 
                     if (value === 0) {
                         cell.classList.add('empty');
