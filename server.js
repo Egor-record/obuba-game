@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
 
 
 const wss = new WebSocket.Server({ server });
-const PORT = 3000;
+const PORT = 3300;
 
 server.listen(PORT, () => {
   console.log(`HTTP + WebSocket server running at http://localhost:${PORT}`);
