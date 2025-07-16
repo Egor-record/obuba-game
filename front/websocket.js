@@ -1,6 +1,6 @@
 class Socket {
     constructor(game) {
-        this.ws = new WebSocket('ws://185.162.238.5:3000');
+        this.ws = new WebSocket('ws://localhost:3300');
         this.ws.onopen = () => {
             this.loadMatrixFromServer();
         };

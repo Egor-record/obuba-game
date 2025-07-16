@@ -1,0 +1,36 @@
+const fs = require('fs').promises;
+const path = require('path');
+const { STATIC_PATH } = require('./consts');
+
+
+const saveMatrix = async (matrix, board) => {
+    try {
+      const filePath = path.join(__dirname, STATIC_PATH, `matrix-${board}.json`);
+      await fs.writeFile(filePath, JSON.stringify(matrix));
+      return true;
+    } catch (err) {
+      console.error('Error saving matrix:', err);
+      return false;
+    }
+};
+  
+const getFile = async board => {
+    const filePath = path.join(__dirname, STATIC_PATH, `matrix-${board}.json`);
+    return await fs.readFile(filePath, 'utf8');
+}
+  
+const sendToClient = (client, payload) => {
+    client.send(JSON.stringify({
+      type: 'update',
+      payload: {
+        matrix: payload.matrix,
+        board: payload.board
+      }
+    }));
+}
+
+module.exports = {
+    saveMatrix,
+    getFile,
+    sendToClient
+  };
