@@ -2,20 +2,19 @@ const fs = require('fs').promises;
 const path = require('path');
 const { STATIC_PATH } = require('./consts');
 
-
 const saveMatrix = async (matrix, boardIndex) => {
   if (!boardIndex === undefined || boardIndex === null || matrix === null || matrix === undefined) {
     console.error('No boardIndex or matrix provided', err);
     return false
   }
- try {
-      const filePath = path.join(__dirname, STATIC_PATH, `matrix-${boardIndex}.json`);
-      await fs.writeFile(filePath, JSON.stringify(matrix));
-      return true;
-    } catch (err) {
-      console.error('Error saving matrix:', err);
-      return false;
-    }
+  try {
+    const filePath = path.join(__dirname, STATIC_PATH, `matrix-${boardIndex}.json`);
+    await fs.writeFile(filePath, JSON.stringify(matrix));
+    return true;
+  } catch (err) {
+    console.error('Error saving matrix:', err);
+    return false;
+  }
 };
   
 const getFile = async boardIndex => {
