@@ -41,7 +41,8 @@
                 padding: 64px 64px;
             }
         }
-        #game-board {
+
+        .game-board  {
             display: grid;
             grid-template-columns: repeat(4, 60px);
             grid-template-rows: repeat(4, 60px);
@@ -58,11 +59,9 @@
             height: 60px;
             border-radius: 4px;
         }
-        .clickeble {
-            cursor: pointer;
-        }
         .clickeble:hover {
             background: #b1d4ea;
+            cursor: pointer;
         }
         .empty {
             background-color: var(--board-bg-color);
@@ -96,7 +95,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#02522a"><path d="M480-120q-138 0-240.5-91.5T122-440h82q14 104 92.5 172T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h110v80H120v-240h80v94q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Zm112-192L440-464v-216h80v184l128 128-56 56Z"/></svg>
                 </button>
             </div>
-            <div id="game-board-a"></div>
+            <div id="game-board-0" data-board-index="0" class="game-board"></div>
         </div>
         <div class="boardWrapper">
             <div class="buttonsWrapper">
@@ -107,25 +106,17 @@
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#02522a"><path d="M480-120q-138 0-240.5-91.5T122-440h82q14 104 92.5 172T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h110v80H120v-240h80v94q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Zm112-192L440-464v-216h80v184l128 128-56 56Z"/></svg>
                 </button>
             </div>
-            <div id="game-board-b"></div>
+            <div id="game-board-1" data-board-index="1" class="game-board"></div>
         </div>
     </div>
     <script src="game.js"></script>
     <script src="websocket.js"></script>
     <script>
-        const boards = [{
-            game: new Game(),
-            historyManager: new HistoryManager(),
-        },
-        {
-            game: new Game(),
-            historyManager: new HistoryManager()
-        }];
-        
-        boards.forEach((board, index)=>board.socket=new Socket(boards[index].game))
-   
-        const renderMatrix = (element, matrix) => {
-            const board = document.getElementById(element);
+        const boards = [new Game(), new Game()]
+        const socket = new Socket();
+
+        const renderMatrix = (boardIndex, matrix) => {
+            const board = document.getElementById(`game-board-${boardIndex}`);
             board.innerHTML = '';
 
             for (let row = 0; row < matrix.length; row++) {
@@ -142,7 +133,7 @@
                     } else {
                         cell.setAttribute('data-value', value);
                         cell.textContent = value;
-                        if (game.isNextToZero(row, col)) {
+                        if (boards[boardIndex].utils.isNextToZero(row, col, matrix)) {
                             cell.classList.add('clickeble'); 
                             cell.classList.add('js-clickable'); 
                         }
@@ -153,16 +144,23 @@
             }
         }
 
-        ['game-board-a', 'game-board-b'].forEach((element, index)=>renderMatrix(element, boards[index].game.matrix))
+        [0, 1].forEach((element)=>renderMatrix(element, boards[element].matrix))
    
         document.addEventListener('click', function (event) {
             if (event.target.classList.contains('js-clickable')) {
                 const row = +event.target.dataset.row;
                 const col = +event.target.dataset.col;
-                game.makeMove(row, col)
-                renderMatrix(game.matrix)
-                socket.saveMatrixToServer();
-                historyManager.saveSnapshot(game)
+                
+                const parentDiv = event.target.closest('[data-board-index]');
+                if (!parentDiv) { return }
+
+                const boarderIndex = +(parentDiv.getAttribute('data-board-index'));
+                const matrix = boards[boarderIndex].matrix;
+                boards[boarderIndex].makeMove(row, col)
+                renderMatrix(boarderIndex, matrix)
+                socket.saveMatrixToServer(boarderIndex, matrix);
+                    // historyManager.saveSnapshot(game)
+           
             }
         });
 

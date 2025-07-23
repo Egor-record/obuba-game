@@ -3,9 +3,13 @@ const path = require('path');
 const { STATIC_PATH } = require('./consts');
 
 
-const saveMatrix = async (matrix, board) => {
-    try {
-      const filePath = path.join(__dirname, STATIC_PATH, `matrix-${board}.json`);
+const saveMatrix = async (matrix, boardIndex) => {
+  if (!boardIndex === undefined || boardIndex === null || matrix === null || matrix === undefined) {
+    console.error('No boardIndex or matrix provided', err);
+    return false
+  }
+ try {
+      const filePath = path.join(__dirname, STATIC_PATH, `matrix-${boardIndex}.json`);
       await fs.writeFile(filePath, JSON.stringify(matrix));
       return true;
     } catch (err) {
@@ -14,8 +18,8 @@ const saveMatrix = async (matrix, board) => {
     }
 };
   
-const getFile = async board => {
-    const filePath = path.join(__dirname, STATIC_PATH, `matrix-${board}.json`);
+const getFile = async boardIndex => {
+    const filePath = path.join(__dirname, STATIC_PATH, `matrix-${boardIndex}.json`);
     return await fs.readFile(filePath, 'utf8');
 }
   
@@ -30,7 +34,7 @@ const sendToClient = (client, payload) => {
 }
 
 module.exports = {
-    saveMatrix,
-    getFile,
-    sendToClient
-  };
+  saveMatrix,
+  getFile,
+  sendToClient
+};

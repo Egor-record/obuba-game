@@ -14,9 +14,30 @@ class HistoryManager {
     }
 }
 
+class GameUtils {
+    findZero(matrix) {
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                if (matrix[i][j] === 0) {
+                    return [i, j];
+                }
+            }
+        }
+    }
+  
+    isNextToZero(x, y, matrix) {
+        const [zx, zy] = this.findZero(matrix);
+        const dx = Math.abs(x - zx);
+        const dy = Math.abs(y - zy);
+        return (dx + dy === 1);
+    }
+}
+
 class Game {
     constructor() {
       this.matrix = [];
+      this.historyManager = new HistoryManager()
+      this.utils = new GameUtils();
     }  
     createEmptyMatrix() {
         const numbers = [...Array(15).keys()].map(n => n + 1);
@@ -39,26 +60,9 @@ class Game {
     }
   
     makeMove(x, y) {
-        if (!this.isNextToZero(x, y)) return;    
-        const [zx, zy] = this.findZero();
+        if (!this.utils.isNextToZero(x, y, this.matrix)) return;    
+        const [zx, zy] = this.utils.findZero(this.matrix);
         this.save();
         [this.matrix[x][y], this.matrix[zx][zy]] = [this.matrix[zx][zy], this.matrix[x][y]];
-    }
-
-    findZero() {
-        for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 4; j++) {
-                if (this.matrix[i][j] === 0) {
-                    return [i, j];
-                }
-            }
-        }
-    }
-  
-    isNextToZero(x, y) {
-        const [zx, zy] = this.findZero();
-        const dx = Math.abs(x - zx);
-        const dy = Math.abs(y - zy);
-        return (dx + dy === 1);
     }
 }

@@ -1,35 +1,41 @@
 class Socket {
-    constructor(game) {
+    constructor() {
         this.ws = new WebSocket('ws://localhost:3300');
         this.ws.onopen = () => {
-            this.loadMatrixFromServer();
+            [0, 1].forEach(board=> this.sendGetMatrixRequest(board))
         };
         this.ws.onmessage = (event) => {
-            const msg = JSON.parse(event.data);
-            if (msg.type === 'get' && msg.status === 'ok') {
-                game.matrix = msg.payload;
-                renderMatrix(game.matrix);
+            if (!event.data) {
+                console.warn("Empty message data recieved")
+                return 
             }
-            
-            if (msg.type === 'update') {
-                game.matrix = msg.payload;
-                renderMatrix(game.matrix);
+            const { payload, status, type } = JSON.parse(event.data);
+            if (!payload.matrix) {
+                console.warn("No matrix provided")
+                return
+            } 
+            if (status === 'ok' && (type === 'get' || type === 'update')) {
+                boards[payload.boardIndex].matrix = payload.matrix;
+                renderMatrix(payload.boardIndex, payload.matrix);
             }
         };
     }
 
-    saveMatrixToServer() {
+    saveMatrixToServer(boardIndex, matrix) {
         if (this.ws.readyState === WebSocket.OPEN) {
             this.ws.send(JSON.stringify({
                 type: 'save',
-                payload: game.matrix
+                payload: {
+                    boardIndex,
+                    matrix
+                }
             }));
         }
     }
 
-    loadMatrixFromServer() {
+    sendGetMatrixRequest(boardIndex) {
         if (this.ws.readyState === WebSocket.OPEN) {
-            this.ws.send(JSON.stringify({ type: 'get' }));
+            this.ws.send(JSON.stringify({ type: 'get', boardIndex }));
         } else {
             console.warn('WebSocket not ready');
         }

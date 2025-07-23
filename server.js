@@ -43,12 +43,15 @@ server.listen(PORT, () => {
 wss.on('connection', ws => {
     ws.on('message', async message => {
         try {
-            const data = JSON.parse(message);
-            const { matrix, board } = data.payload
+            const data = JSON.parse(message);         
             if (data.type === 'save') {
-                const result = await saveMatrix(matrix, board)
+                if (!data.payload.matrix) { 
+                  ws.send(JSON.stringify({ type: 'save', status: 'error', errorMsg: 'No matrix provided' }));
+                  return 
+                }
+                const result = await saveMatrix(data.payload.matrix, data.payload.boardIndex)
                 if (!result) {
-                  ws.send(JSON.stringify({ type: 'save', status: 'error' }));
+                  ws.send(JSON.stringify({ type: 'save', status: 'error', errorMsg: 'Error saving matrix' }));
                   return
                 }
                 wss.clients.forEach(client => {
@@ -57,14 +60,15 @@ wss.on('connection', ws => {
                   }
                 });
             } else if (data.type === 'get') {
+                const { boardIndex } = data
                 try {
-                  const matrix = await getFile(board)
+                  const matrix = await getFile(boardIndex)
                   ws.send(JSON.stringify({
                     type: 'get',
                     status: 'ok',
                     payload: {
                       matrix: JSON.parse(matrix), 
-                      board: board
+                      boardIndex
                     }
                   }));
 
@@ -77,7 +81,7 @@ wss.on('connection', ws => {
                 }
             }
         } catch (e) {
-            console.error('Invalid message:', message);
+            console.error('Invalid message:', e);
         }
     })
 });
