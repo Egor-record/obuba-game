@@ -1,6 +1,6 @@
 class Socket {
     constructor() {
-        this.ws = new WebSocket('ws://obuba.fun');
+        this.ws = new WebSocket('wss://obuba.fun');
         this.ws.onopen = () => {
             [0, 1].forEach(board=> this.sendGetMatrixRequest(board))
         };
