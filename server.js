@@ -40,8 +40,15 @@ const server = http.createServer((req, res) => {
         res.end(data);
       });
     } else {
-      res.writeHead(404);
-      res.end('Not found');
+      fs.readFile(path.join(__dirname, FRONT_PATH, '404.html'), (err, content) => {
+        if (err) {
+          res.writeHead(500);
+          res.end('Error loading index.html');
+        } else {
+          res.writeHead(404, { 'Content-Type': 'text/html' });
+          res.end(content);
+        }
+      });
     }
 });
 
