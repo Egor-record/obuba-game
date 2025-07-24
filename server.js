@@ -27,6 +27,18 @@ const server = http.createServer((req, res) => {
           res.end(content);
         }
       });
+    } else if (req.url.startsWith('/img/')) {
+      const imgPath = path.join(__dirname, FRONT_PATH, 'img', path.basename(req.url));
+  
+      fs.readFile(imgPath, (err, data) => {
+        if (err) {
+          res.writeHead(404);
+          return res.end('Image not found');
+        }
+  
+        res.writeHead(200, { 'Content-Type': 'image/png' }); // adjust for other types
+        res.end(data);
+      });
     } else {
       res.writeHead(404);
       res.end('Not found');
