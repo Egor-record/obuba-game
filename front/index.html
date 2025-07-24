@@ -24,9 +24,24 @@
             background-size: cover;
             background-repeat: no-repeat;
         }
+
         h1 {
             text-align: center;
         }
+        .container {
+            display: grid;
+            grid-template-rows: auto auto;
+            justify-items: center;
+            gap: 2rem;
+        }
+        @media (min-width: 828px) {
+            .boardContainer {
+                display: grid;
+                grid-template-columns: repeat(2, auto);
+                gap: 2rem;
+            }
+        }
+
         .boardWrapper {
             background-color: var(--board-bg-color);
             margin: 30px auto;
@@ -36,12 +51,15 @@
             box-shadow: 0 8px 40px rgba(0,0,0,.1);
             position: relative;
         }
+        .is-hovered,
+        .boardWrapper:hover {
+            background: #e6e3df;
+        }
         @media (min-width: 394px) {
             .boardWrapper {
                 padding: 64px 64px;
             }
         }
-
         .game-board  {
             display: grid;
             grid-template-columns: repeat(4, 60px);
@@ -77,36 +95,35 @@
             border: none;
             border-radius: 4px;
             height: 35px;
-            line-height: 34px;
+            line-height: 44px;
             text-align: center;
             cursor: pointer;
+        }
+        button:hover {
+            background: #dfddd9;
         }
     </style>
 </head>
 <body>
-    <div>
+    <div class="container">
         <h1>Obuba Game</h1>
-        <div class="boardWrapper">
-            <div class="buttonsWrapper">
-                <button id="js-restart-game">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f86804"><path d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z"/></svg>
-                </button>
-                <button class="js-stepback">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#02522a"><path d="M480-120q-138 0-240.5-91.5T122-440h82q14 104 92.5 172T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h110v80H120v-240h80v94q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Zm112-192L440-464v-216h80v184l128 128-56 56Z"/></svg>
-                </button>
+        <div class="boardContainer">
+            <div class="boardWrapper" data-board-index="0">
+                <div class="buttonsWrapper">
+                    <button>
+                        <svg class="js-restart-game" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f86804"><path d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z"/></svg>
+                    </button>
+                </div>
+                <div id="game-board-0" class="game-board"></div>
             </div>
-            <div id="game-board-0" data-board-index="0" class="game-board"></div>
-        </div>
-        <div class="boardWrapper">
-            <div class="buttonsWrapper">
-                <button id="js-restart-game">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f86804"><path d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z"/></svg>
-                </button>
-                <button class="js-stepback">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#02522a"><path d="M480-120q-138 0-240.5-91.5T122-440h82q14 104 92.5 172T480-200q117 0 198.5-81.5T760-480q0-117-81.5-198.5T480-760q-69 0-129 32t-101 88h110v80H120v-240h80v94q51-64 124.5-99T480-840q75 0 140.5 28.5t114 77q48.5 48.5 77 114T840-480q0 75-28.5 140.5t-77 114q-48.5 48.5-114 77T480-120Zm112-192L440-464v-216h80v184l128 128-56 56Z"/></svg>
-                </button>
+            <div class="boardWrapper" data-board-index="1">
+                <div class="buttonsWrapper">
+                    <button>
+                        <svg class="js-restart-game" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f86804"><path d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z"/></svg>
+                    </button>
+                </div>
+                <div id="game-board-1" class="game-board"></div>
             </div>
-            <div id="game-board-1" data-board-index="1" class="game-board"></div>
         </div>
     </div>
     <script src="game.js"></script>
@@ -144,32 +161,58 @@
             }
         }
 
-        [0, 1].forEach((element)=>renderMatrix(element, boards[element].matrix))
+        [0, 1].forEach((element)=>renderMatrix(element, boards[element].matrix));
+
+        const getBoardId = event => +(event.target.closest('[data-board-index]').getAttribute('data-board-index'));
+        
+        const boardWrappers = document.querySelectorAll('.boardWrapper');
+
+        const updateHover = (boardId, isHover) => {
+            if (!boardId) return
+            const el = document.querySelector(`[data-board-index="${boardIndex}"]`);
+            if (!el) return
+            if (isHover) {
+                el.classList.add('is-hovered');
+            } else {
+                el.classList.remove('is-hovered');
+            }
+        }
+
+        boardWrappers.forEach(wrapper => {
+            wrapper.addEventListener('mouseenter', (event) => {
+                console.log('Hovered on boardWrapper', event.target.getAttribute('data-board-index'));
+                const boardId = event.target.getAttribute('data-board-index');
+                event.target.classList.add('is-hovered');
+            });
+
+            wrapper.addEventListener('mouseleave', (event) => {
+                console.log('Hover left boardWrapper');
+                // Cleanup or revert logic here
+                event.target.classList.remove('is-hovered');
+            });
+        });
    
         document.addEventListener('click', function (event) {
             if (event.target.classList.contains('js-clickable')) {
                 const row = +event.target.dataset.row;
                 const col = +event.target.dataset.col;
-                
-                const parentDiv = event.target.closest('[data-board-index]');
-                if (!parentDiv) { return }
-
-                const boarderIndex = +(parentDiv.getAttribute('data-board-index'));
-                const matrix = boards[boarderIndex].matrix;
-                boards[boarderIndex].makeMove(row, col)
-                renderMatrix(boarderIndex, matrix)
-                socket.saveMatrixToServer(boarderIndex, matrix);
+                const boardId = getBoardId(event)
+                const matrix = boards[boardId].matrix;
+                boards[boardId].makeMove(row, col)
+                renderMatrix(boardId, matrix)
+                socket.saveMatrixToServer(boardId, matrix);
                     // historyManager.saveSnapshot(game)
-           
             }
         });
 
-        document.getElementById('js-restart-game').addEventListener('click', () => {
-            const emptyMatrix = game.createEmptyMatrix()
-            game.matrix = emptyMatrix;
-            socket.saveMatrixToServer(game.matrix)
-            historyManager.saveSnapshot(game)
-            renderMatrix(emptyMatrix)
+        document.addEventListener('click', function (event) {
+            if (event.target.classList.contains('js-restart-game')) {
+                const boardId = getBoardId(event)
+                boards[boardId].matrix = boards[boardId].createEmptyMatrix();
+                socket.saveMatrixToServer(boardId, boards[boardId].matrix)
+                // historyManager.saveSnapshot(game)
+                renderMatrix(boardId, boards[boardId].matrix)
+            }
         });
     </script>
 </body>
