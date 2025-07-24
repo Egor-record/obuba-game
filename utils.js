@@ -23,11 +23,12 @@ const getFile = async boardIndex => {
 }
   
 const sendToClient = (client, payload) => {
+  console.log('sending')
     client.send(JSON.stringify({
       type: 'update',
       payload: {
         matrix: payload.matrix,
-        board: payload.board
+        boardIndex: payload.boardIndex
       }
     }));
 }

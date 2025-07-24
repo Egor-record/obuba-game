@@ -13,17 +13,16 @@ class Socket {
                 return 
             }
             const { payload, status, type } = JSON.parse(event.data);
-            if (!payload.matrix) {
-                console.warn("No matrix provided")
-                return
-            } 
-            if (status === 'ok') {
-                if (type === 'get' || type === 'update') {
-                    boards[payload.boardIndex].matrix = payload.matrix;
-                    renderMatrix(payload.boardIndex, payload.matrix);
-                } else if (type === 'hover') {
-                    updateHover(payload.boardIndex, payload.isHover)
-                }
+
+            if (type === 'get' || type === 'update') {
+                if (!payload.matrix) {
+                    console.warn("No matrix provided")
+                    return
+                } 
+                boards[payload.boardIndex].matrix = payload.matrix;
+                renderMatrix(payload.boardIndex, payload.matrix);
+            } else if (type === 'hover') {
+                updateHover(payload.boardIndex, payload.isHover)
             }
         };
         window.addEventListener('beforeunload', () => {

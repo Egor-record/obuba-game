@@ -169,7 +169,7 @@
 
         const updateHover = (boardId, isHover) => {
             if (!boardId) return
-            const el = document.querySelector(`[data-board-index="${boardIndex}"]`);
+            const el = document.querySelector(`[data-board-index="${boardId}"]`);
             if (!el) return
             if (isHover) {
                 el.classList.add('is-hovered');
@@ -183,12 +183,13 @@
                 console.log('Hovered on boardWrapper', event.target.getAttribute('data-board-index'));
                 const boardId = event.target.getAttribute('data-board-index');
                 event.target.classList.add('is-hovered');
+                socket.toggleHover(boardId, true)
             });
 
             wrapper.addEventListener('mouseleave', (event) => {
-                console.log('Hover left boardWrapper');
-                // Cleanup or revert logic here
+                const boardId = event.target.getAttribute('data-board-index');
                 event.target.classList.remove('is-hovered');
+                socket.toggleHover(boardId, false)
             });
         });
    

@@ -43,7 +43,7 @@ server.listen(PORT, () => {
 wss.on('connection', ws => {
     ws.on('message', async message => {
         try {
-            const data = JSON.parse(message);         
+            const data = JSON.parse(message);      
             if (data.type === 'save') {
                 if (!data.payload.matrix) { 
                   ws.send(JSON.stringify({ type: 'save', status: 'error', errorMsg: 'No matrix provided' }));
@@ -55,8 +55,8 @@ wss.on('connection', ws => {
                   return
                 }
                 wss.clients.forEach(client => {
-                  if (client !== ws && client.readyState === 1) {
-                    sendToClient(client, data.payload)
+                  if (client !== ws && client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ type: 'update', payload: data.payload }));
                   }
                 });
             } else if (data.type === 'get') {
@@ -79,6 +79,12 @@ wss.on('connection', ws => {
                     status: 'error'
                   }));
                 }
+            } else if (data.type === 'hover') {
+              wss.clients.forEach(client => {
+                if (client !== ws && client.readyState === WebSocket.OPEN) {
+                  client.send(JSON.stringify({ type: 'hover', payload: data.payload }));
+                }
+              });
             }
         } catch (e) {
             console.error('Invalid message:', e);
