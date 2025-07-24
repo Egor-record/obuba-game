@@ -21,7 +21,7 @@ class Socket {
                 if (type === 'get' || type === 'update') {
                     boards[payload.boardIndex].matrix = payload.matrix;
                     renderMatrix(payload.boardIndex, payload.matrix);
-                } else if (|| type === 'hover') {
+                } else if (type === 'hover') {
                     updateHover(payload.boardIndex, payload.isHover)
                 }
             }
