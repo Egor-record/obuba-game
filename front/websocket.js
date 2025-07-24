@@ -28,7 +28,7 @@ class Socket {
         window.addEventListener('beforeunload', () => {
             if (this.ws && this.ws.readyState === WebSocket.OPEN) {
               this.ws.close(1000, 'User closed the page');
-             [0,1].forEach(index => updateHover(index, 0)
+             [0,1].forEach(index => updateHover(index, 0))
             }
         });
     }
