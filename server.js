@@ -28,15 +28,25 @@ const server = http.createServer((req, res) => {
         }
       });
     } else if (req.url.startsWith('/img/')) {
-      const imgPath = path.join(__dirname, FRONT_PATH, 'img', path.basename(req.url));
-  
+      const fileName = path.basename(req.url);
+      const ext = path.extname(fileName).toLowerCase();
+      const imgPath = path.join(__dirname, FRONT_PATH, 'img', fileName);
+    
       fs.readFile(imgPath, (err, data) => {
         if (err) {
           res.writeHead(404);
           return res.end('Image not found');
         }
-  
-        res.writeHead(200, { 'Content-Type': 'image/png' }); // adjust for other types
+    
+        let contentType = 'application/octet-stream';
+    
+        if (ext === '.png') {
+          contentType = 'image/png';
+        } else if (ext === '.svg') {
+          contentType = 'image/svg+xml';
+        } 
+    
+        res.writeHead(200, { 'Content-Type': contentType });
         res.end(data);
       });
     } else {

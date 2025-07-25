@@ -47,7 +47,6 @@
             display: grid;
             grid-template-rows: auto auto;
             justify-items: center;
-            gap: 2rem;
         }
         @media (min-width: 828px) {
             .boardContainer {
@@ -106,7 +105,7 @@
             top:10px;
             left: 10px;
         }
-        button {
+        button.restart {
             background: transparent;
             color: #fff;
             border: none;
@@ -116,9 +115,87 @@
             text-align: center;
             cursor: pointer;
         }
-        button:hover {
+        button.restart:hover {
             background: #dfddd9;
         }
+        .githubLink {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .als-cookie-button {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transform: translate3d(0, 110%, 0);
+            opacity: 0;
+            z-index: 11;
+            text-align: left;
+            width: 100%;
+            font-size: 16px;
+        }
+        .als-cookie-button.show {
+            transform: translate3d(0, 0, 0);
+            opacity: 1;
+        }
+        @media (max-width: 900px) {
+            .als-cookie-button {
+                font-size: 15px;
+            }
+        }
+        @media (max-width: 700px) {
+        .als-cookie-button {
+                font-size: 14px;
+            }
+        }
+        .als-cookie-button div {
+            background: #384BEC;
+            color: #fff;
+            padding: 1.5em 13em 1.5em 2em;
+            cursor: pointer;
+            position: relative;
+            transition: all .3s;
+        }
+        .als-cookie-button {
+            transition: all .4s cubic-bezier(.165,.84,.44,1);
+        }
+        @media (max-width: 700px) {
+            .als-cookie-button div {
+                padding-right: 1em;
+                padding-left: 1em;
+            }
+        }
+
+        .als-cookie-button button {
+            background: rgba(255, 255, 255, .2);
+            font-size: inherit;
+            font-family: inherit;
+            border-radius: 50px;
+            border: none;
+            color: inherit;
+            outline: 0;
+            display: block;
+            position: absolute;
+            right: 20px;
+            top: 1em;
+            bottom: 1em;
+            cursor: pointer;
+            padding: 0 3em;
+            transition: all .3s;
+        }
+
+        @media (max-width: 700px) {
+            .als-cookie-button button {
+                position: static;
+                display: block;
+                padding: 1em;
+                text-align: center;
+                width: 100%;
+                margin-top: .5em;
+            }
+        }
+
     </style>
     <!-- Yandex.Metrika counter -->
     <script type="text/javascript">
@@ -139,10 +216,15 @@
         <h1>
             Obuba Game
         </h1>
+        <div class="githubLink">
+            <a href="https://github.com/Egor-record/obuba-game" target="_blank" rel="nofollow" title="Link to GitHub">
+                <img src="/img/github-mark.svg" width="30" height="30" alt="GitHub Icon"/>
+            </a>
+        </div>
         <div class="boardContainer">
             <div class="boardWrapper" data-board-index="0">
                 <div class="buttonsWrapper">
-                    <button class="js-restart-game">
+                    <button class="js-restart-game restart" title="Press to restart">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f86804"><path d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z"/></svg>
                     </button>
                     <img src="/img/obuba_men.png" alt="Obuba Game" height="24px">
@@ -151,13 +233,18 @@
             </div>
             <div class="boardWrapper" data-board-index="1">
                 <div class="buttonsWrapper">
-                    <button class="js-restart-game">
+                    <button class="js-restart-game restart" title="Press to restart">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#f86804"><path d="M204-318q-22-38-33-78t-11-82q0-134 93-228t227-94h7l-64-64 56-56 160 160-160 160-56-56 64-64h-7q-100 0-170 70.5T240-478q0 26 6 51t18 49l-60 60ZM481-40 321-200l160-160 56 56-64 64h7q100 0 170-70.5T720-482q0-26-6-51t-18-49l60-60q22 38 33 78t11 82q0 134-93 228t-227 94h-7l64 64-56 56Z"/></svg>
                     </button>
                     <img src="/img/obuba_men.png" alt="Obuba Game" height="24px">
                 </div>
                 <div id="game-board-1" class="game-board"></div>
             </div>
+        </div>
+    </div>
+    <div class="als-cookie-button" id="als-cookie-box">
+        <div>We are using cookies on this website because without cookies the entire Internet would start obubing.
+            <button id="accept-cookies">Fine</button>
         </div>
     </div>
     <script src="game.js"></script>
@@ -263,6 +350,22 @@
                 renderMatrix(boardId, boards[boardId].matrix)
             }
         });
+
+        const handleCookie = () => {
+            const cookieBox = document.getElementById('als-cookie-box');
+            const cookieAccepted = document.cookie.includes('cookieAccepted=true');
+
+            if (!cookieAccepted) {
+                cookieBox.classList.add('show');
+            }
+
+            document.getElementById('accept-cookies').addEventListener('click', () => {
+                document.cookie = "cookieAccepted=true; max-age=" + 60 * 60 * 24 * 365 + "; path=/";
+                cookieBox.classList.remove('show');
+            });
+        }
+
+
     </script>
 </body>
 </html>
