@@ -197,19 +197,6 @@
         }
 
     </style>
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=103474408', 'ym');
-
-        ym(103474408, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/103474408" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
 </head>
 <body>
     <div class="container">
@@ -243,7 +230,7 @@
         </div>
     </div>
     <div class="als-cookie-button" id="als-cookie-box">
-        <div>We are using cookies on this website because without cookies the entire Internet would start obubing.
+        <div>We do not share your data with third-party companies. We use cookies to track the number of visitors and the city they came from.
             <button id="accept-cookies">Fine</button>
         </div>
     </div>
@@ -352,16 +339,40 @@
         });
 
         const handleCookie = () => {
+            const createTrackerBox = sessionId => {
+                const img = document.createElement('img');
+                img.src = `https://borisbot.site/watch/700966/index?sessionId=${sessionId}`;
+                img.alt = 'This is activity tracker';
+                img.style.position = 'absolute';
+                img.style.left = '-9999px';
+
+                document.body.appendChild(img);
+            }
+            const initTrackerBox = () => {
+                let sessionId = sessionStorage.getItem('sessionId');
+                if (!sessionId) {
+                    sessionId = Math.floor(Math.random() * 1_000_000_000).toString()
+                    sessionStorage.setItem('sessionId', sessionId);
+                    createTrackerBox(sessionId);
+                } else {
+                    createTrackerBox(sessionId);
+                }
+            }
             const cookieBox = document.getElementById('als-cookie-box');
-            const cookieAccepted = document.cookie.includes('cookieAccepted=true');
+            const cookieAccepted = document.cookie.includes('obubaAccepted=true');
 
             if (!cookieAccepted) {
                 cookieBox.classList.add('show');
+            } else {
+                initTrackerBox()
             }
 
+            
+
             document.getElementById('accept-cookies').addEventListener('click', () => {
-                document.cookie = "cookieAccepted=true; max-age=" + 60 * 60 * 24 * 365 + "; path=/";
+                document.cookie = "obubaAccepted=true; max-age=" + 60 * 60 * 24 * 365 + "; path=/";
                 cookieBox.classList.remove('show');
+                initTrackerBox()
             });
         }
         handleCookie();
